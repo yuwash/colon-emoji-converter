@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="fluent--text-arrow-down-right-column-16-filled.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/emoji-js@3.9.0/lib/emoji.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Colon Emoji Converter</title>
+  </head>
+  <body>
+    <header class="hero is-primary">
+      <div class="hero-body">
+        <h1 class="title">Colon Emoji Converter</h1>
+        <p class="subtitle">
+          Convert colon emoji shortcodes to Unicode emoji.
+        </p>
+      </div>
+    </header>
+    <div class="section">
+      <textarea id="editor" placeholder="Enter text containing colon emoji such as :jack_o_lantern: here..." style="width: 100%; height: 20vh; min-height: 5em;"></textarea>
+      <div id="outputContainer">
+          <h2>Converted Text:</h2>
+          <div class="position-relative">
+            <button id="copyButton" class="button is-small" style="float: right; margin: .5em .5em -100%;">
+              📋 Copy
+            </button>
+            <pre id="output" style="white-space: pre-wrap"></pre>
+          </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="content">
+        <p>
+          This tool uses the
+          <a href="https://github.com/iamcal/js-emoji">js-emoji</a>
+          (npm: <code>emoji-js</code>) library to convert colon emoji
+          shortcodes (e.g., <code>:jack_o_lantern:</code>) into their
+          corresponding Unicode emoji characters (🎃).
+          (I’m not in any way affiliated with js-emoji)
+        </p>
+        <p>
+          Emoji shortcodes are commonly used on platforms like GitHub,
+          Slack, and Discord.
+          However, copying content with these shortcodes into platforms
+          that do not support them can be difficult, as they may not
+          render correctly.
+          This converter helps bridge that gap by providing a way to
+          replace all shortcodes in your text with their Unicode emoji
+          characters so that you can paste them (almost) anywhere.
+        </p>
+        <a href="https://github.com/yuwash/colon-emoji-converter" class="button is-info is-small">Source Code (GitHub)</a>
+        <a href="https://yuwash.eu" class="button is-info is-small">About the author</a>
+      </div>
+    </footer>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
