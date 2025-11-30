@@ -19,8 +19,15 @@
     </header>
     <div class="section">
       <textarea id="editor" placeholder="Enter text containing colon emoji such as :jack_o_lantern: here..." style="width: 100%; height: 20vh; min-height: 5em;"></textarea>
-      <div class="notification is-info">
+      <div id="defaultNotification" class="notification is-info">
         Paste text into the text area above and the converted text will appear below.
+      </div>
+      <div id="pasteChoiceNotification" class="notification is-warning" style="display: none;">
+        <p>Pasted content contains HTML. Choose how to paste:</p>
+        <div class="buttons">
+          <button class="button is-primary" id="pasteHtmlButton">Paste HTML Source</button>
+          <button class="button is-secondary" id="pastePlainTextButton">Paste Plain Text</button>
+        </div>
       </div>
       <div id="outputContainer" class="position-relative">
         <button id="copyButton" class="button is-small" style="float: right; margin: .5em .5em -100%;">

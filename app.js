@@ -1,29 +1,98 @@
 const app = () => {
     const emojiInput = document.getElementById('editor');
     const emojiOutput = document.getElementById('output');
-    const copyButton = document.getElementById('copyButton'); // Get the copy button
+    const copyButton = document.getElementById('copyButton');
+    const defaultNotification = document.getElementById('defaultNotification');
+    const pasteChoiceNotification = document.getElementById('pasteChoiceNotification');
+
+    // Enum for paste modes
+    const PasteMode = {
+        HTML: 'html',
+        PLAIN: 'plain'
+    };
 
     // Initialize EmojiConvertor
     const emojiConverter = new EmojiConvertor();
-    
+
     // --- Key Configurations for Unicode Output ---
-    
+
     emojiConverter.replace_mode = 'unified';
     emojiConverter.allow_native = true;
-    
+
+    // --- Function to handle paste mode choice ---
+    const choosePasteMode = (pastedHtml, pastedText) => {
+        return new Promise((resolve) => {
+            // Show the paste choice notification and hide the default one
+            pasteChoiceNotification.style.display = 'block';
+            defaultNotification.style.display = 'none';
+
+            const pasteHtmlButton = document.getElementById('pasteHtmlButton');
+            const pastePlainTextButton = document.getElementById('pastePlainTextButton');
+
+            const cleanup = () => {
+                // Hide the paste choice notification and show the default one
+                pasteChoiceNotification.style.display = 'none';
+                defaultNotification.style.display = 'block';
+                pasteHtmlButton.removeEventListener('click', handleHtmlClick);
+                pastePlainTextButton.removeEventListener('click', handlePlainTextClick);
+            };
+
+            const handleHtmlClick = () => {
+                cleanup();
+                resolve(PasteMode.HTML);
+            };
+
+            const handlePlainTextClick = () => {
+                cleanup();
+                resolve(PasteMode.PLAIN);
+            };
+
+            pasteHtmlButton.addEventListener('click', handleHtmlClick);
+            pastePlainTextButton.addEventListener('click', handlePlainTextClick);
+        });
+    };
+
     // --- Event Listener for Input ---
-    
+
     emojiInput.addEventListener('input', () => {
         const inputText = emojiInput.value;
-        
+
         // 4. IMPORTANT: Use the method that outputs text/unicode.
         // replace_emoticons() handles both text emoticons and :colon: codes
         // based on the configuration above.
         const convertedText = emojiConverter.replace_emoticons(inputText);
-        
+
         // Using innerHTML is fine, but since the output is just text, innerText also works.
         // We'll stick to innerHTML for consistency with your previous code.
-        emojiOutput.innerHTML = convertedText; 
+        emojiOutput.innerHTML = convertedText;
+    });
+
+    // --- Event Listener for Paste ---
+    emojiInput.addEventListener('paste', async (event) => {
+        // Prevent the default paste behavior
+        event.preventDefault();
+
+        // Get the pasted data
+        const pastedData = (event.clipboardData || window.clipboardData);
+        let text = pastedData.getData('text/plain');
+        const html = pastedData.getData('text/html');
+
+        // Check if HTML data is present and if it's different from plain text
+        if (html && html !== text) {
+            const chosenMode = await choosePasteMode(html, text);
+
+            if (chosenMode === PasteMode.HTML) {
+                emojiInput.value = html;
+            } else { // PLAIN
+                emojiInput.value = text;
+            }
+        } else {
+            // No HTML or HTML is the same as plain text, paste as is
+            emojiInput.value = text;
+        }
+
+        // Trigger the input event to update the output
+        emojiInput.dispatchEvent(new Event('input'));
     });
 
     // --- Event Listener for Copy Button ---
