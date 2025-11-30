@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="fluent--text-arrow-down-right-column-16-filled.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://unpkg.com/emoji-js@3.9.0/lib/emoji.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <title>Colon Emoji Converter</title>
   </head>
@@ -25,8 +26,9 @@
       <div id="pasteChoiceNotification" class="notification is-warning" style="display: none;">
         <p>Pasted content contains HTML. Choose how to paste:</p>
         <div class="buttons">
-          <button class="button is-primary" id="pasteHtmlButton">Paste HTML Source</button>
           <button class="button is-secondary" id="pastePlainTextButton">Paste Plain Text</button>
+          <button class="button is-primary" id="pasteHtmlButton">Paste HTML Source</button>
+          <button class="button is-link" id="pastePurifiedHtmlButton">Paste Purified HTML</button>
         </div>
       </div>
       <div id="outputContainer" class="position-relative">

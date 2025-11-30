@@ -8,7 +8,8 @@ const app = () => {
     // Enum for paste modes
     const PasteMode = {
         HTML: 'html',
-        PLAIN: 'plain'
+        PLAIN: 'plain',
+        HTML_PURIFIED: 'html_purified' // Added for purified HTML paste
     };
 
     // Initialize EmojiConvertor
@@ -28,6 +29,7 @@ const app = () => {
 
             const pasteHtmlButton = document.getElementById('pasteHtmlButton');
             const pastePlainTextButton = document.getElementById('pastePlainTextButton');
+            const pastePurifiedHtmlButton = document.getElementById('pastePurifiedHtmlButton'); // Get the new button
 
             const cleanup = () => {
                 // Hide the paste choice notification and show the default one
@@ -35,6 +37,7 @@ const app = () => {
                 defaultNotification.style.display = 'block';
                 pasteHtmlButton.removeEventListener('click', handleHtmlClick);
                 pastePlainTextButton.removeEventListener('click', handlePlainTextClick);
+                pastePurifiedHtmlButton.removeEventListener('click', handlePurifiedHtmlClick); // Remove listener for new button
             };
 
             const handleHtmlClick = () => {
@@ -47,9 +50,27 @@ const app = () => {
                 resolve(PasteMode.PLAIN);
             };
 
+            // Handler for the new purified HTML button
+            const handlePurifiedHtmlClick = () => {
+                cleanup();
+                resolve(PasteMode.HTML_PURIFIED);
+            };
+
             pasteHtmlButton.addEventListener('click', handleHtmlClick);
             pastePlainTextButton.addEventListener('click', handlePlainTextClick);
+            pastePurifiedHtmlButton.addEventListener('click', handlePurifiedHtmlClick); // Add listener for new button
         });
+    };
+
+    // --- Function to purify HTML ---
+    const purifyHtml = (html) => {
+        // Configure DOMPurify to remove span and div tags, and all attributes
+        const cleanHtml = DOMPurify.sanitize(html, {
+            USE_PROFILES: { html: true }, // Use default HTML profile
+            FORBID_TAGS: ['span', 'div'], // Forbid span and div tags
+            FORBID_ATTR: ['style', 'class', 'id', 'data-*'] // Remove all attributes
+        });
+        return cleanHtml;
     };
 
     // --- Event Listener for Input ---
@@ -83,7 +104,10 @@ const app = () => {
 
             if (chosenMode === PasteMode.HTML) {
                 emojiInput.value = html;
-            } else { // PLAIN
+            } else if (chosenMode === PasteMode.HTML_PURIFIED) {
+                emojiInput.value = purifyHtml(html);
+            }
+            else { // PLAIN
                 emojiInput.value = text;
             }
         } else {
